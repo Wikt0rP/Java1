@@ -17,16 +17,28 @@
     document.getElementById("loginForm").addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const login = document.getElementById("login")
-        const password = document.getElementById("password")
+        const login = document.getElementById("login").value
+        const password = document.getElementById("password").value
 
-        fetch('http://127.0.0.1:8080/login', {
-            method: "Get",
+        fetch('http://127.0.0.1:8080/test/login', {
+            method: "POST",
             headers:{
                 'Content-Type': 'application/json',
                 },
             body: JSON.stringify({password: password, login: login})
-        })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (json) {
+            if (json === "success") {
+                window.location.href = 'panel.html';
+            } else if (json === 'blocked') {
+                window.location.href = 'blocked.html';
+            } else {
+                alert("Błędne dane logowania");
+            }
+        }).catch(function (error) {
+            console.error('Błąd:', error);
+        });
 
 
     })
