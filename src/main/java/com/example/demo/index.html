@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Website</title>
+</head>
+<body>
+<form id = "loginForm">
+    <label for="login">Login:</label><input type ="text" id = "login">
+    <label for="password">Password:</label><input type ="password" id = "password">
+    <input type = "submit">
+</form>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const login = document.getElementById("login")
+        const password = document.getElementById("password")
+
+        fetch('http://127.0.0.1:8080/login', {
+            method: "Get",
+            headers:{
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify({password: password, login: login})
+        })
+
+
+    })
+
+</script>
+</body>
+</html>
