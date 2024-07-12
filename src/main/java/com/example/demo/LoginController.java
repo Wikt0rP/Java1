@@ -25,12 +25,11 @@ public class LoginController {
         if (attempts == null) {
             attempts = 0;
         }
-        if (username.equals(correctLogin) && password.equals(correctPassword)) {
+        if (username.equals(correctLogin) && password.equals(correctPassword) && attempts < 2) {
             session.setAttribute("loginAttempts", 0);
             return "success";
         }
         else{
-            attempts++;
             session.setAttribute("loginAttempts", attempts + 1);
             if (attempts >= 2) {
                 return "blocked";
@@ -43,6 +42,16 @@ public class LoginController {
 
 
 
+
+
+    }
+
+    @PostMapping("/unblock")
+    public String unblock(@RequestBody User user, HttpSession session) {
+        String username = user.getLogin();
+        session.setAttribute("loginAttempts", 0);
+        return "account unblocked!";
+        // w przyszłości dodać generowanie kodu + który trzeba przepisać (niby wysłany na mail'a)
 
 
     }
