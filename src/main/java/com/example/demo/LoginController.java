@@ -4,8 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
@@ -59,20 +57,27 @@ public class LoginController {
     }
 
     @PostMapping("/unblock")
-    public String unblock(@RequestBody ActivationRequest activationRequest, HttpSession session) {
+    public String unblock(@RequestBody ActivationCodeRequest activationCodeRequest, HttpSession session) {
 
-        if(userService.generateActivationCode(activationRequest)){
-            User user = userRepository.findByUsername(activationRequest.getUsername()).orElse(null);
+        if(userService.generateActivationCode(activationCodeRequest)){
+            User user = userRepository.findByUsername(activationCodeRequest.getUsername()).orElse(null);
             if(user!=null){
                 session.setAttribute("loginAttempts", 0);
-                return "Activation code generated!" + user.getActivationCode();
+                return "Activation code generated! --->" + user.getActivationCode();
             }else{
                 throw new Error("Activation code not found");
             }
-
-
         }
             return "Activation code not generated";
+    }
 
+    @PostMapping("/activate")
+    public String activate(@RequestBody ActivateAccountRequest activateAccountRequest){
+
+       if(userService.activateUser(activateAccountRequest)){
+           return "activated";
+       }else{
+           return "account could not be activated";
+       }
     }
 }
