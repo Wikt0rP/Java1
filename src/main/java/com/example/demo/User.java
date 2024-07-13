@@ -23,6 +23,9 @@ public class User {
 
     private Boolean isBlocked;
 
+    @Column(length = 6)
+    private String activationCode;
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
