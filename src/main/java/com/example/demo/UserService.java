@@ -15,4 +15,9 @@ public class UserService {
             return false;
         }
     }
+
+    public void blockUser(User user) {
+        user.setIsBlocked(true);
+        userRepository.save(user);
+    }
 }

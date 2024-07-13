@@ -38,17 +38,21 @@ public class LoginController {
         if(attempts == null) {
             attempts = 0;
         }
-        Optional<User> user = Optional.of(new User());
-        user = userRepository.findByUsername(loginRequest.getUsername());
 
-        if (user.isPresent() && user.get().getPassword().equals(loginRequest.getPassword()) && attempts < 2) {
+        User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
+        if(user == null) {
+            return "User not found";
+        }
+
+        if (user.getPassword().equals(loginRequest.getPassword())  && attempts < 2) {
             session.setAttribute("loginAttempts", 0);
             return "success";
-        }else if(user.isPresent() && attempts < 2){
+        }else if(attempts < 2){
             attempts++;
             session.setAttribute("loginAttempts", attempts);
             return "failed";
         }else{
+            userService.blockUser(user);
             return "blocked";
         }
 
