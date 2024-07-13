@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
@@ -30,38 +32,22 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest loginRequest, HttpSession session) {
 
-        System.out.println("Received login request: " + loginRequest.getUsername() + ", " + loginRequest.getPassword());
-        String username=loginRequest.getUsername();
-        String password=loginRequest.getPassword();
-        String correctPassword=loginRequest.getPassword();
-        String correctLogin = loginRequest.getUsername();
-
-        if (userRepository.existsByUsername(loginRequest.getUsername())) {
-            System.out.println("Username is already in use");
-        }else{
-            System.out.println("Username is valid");
-        }
-
-
-
-
         Integer attempts = (Integer) session.getAttribute("loginAttempts");
-
-        if (attempts == null) {
+        if(attempts == null) {
             attempts = 0;
         }
-        if (username.equals(correctLogin) && password.equals(correctPassword) && attempts < 2) {
+        Optional<User> user = Optional.of(new User());
+        user = userRepository.findByUsername(loginRequest.getUsername());
+
+        if (user.isPresent() && user.get().getPassword().equals(loginRequest.getPassword()) && attempts < 2) {
             session.setAttribute("loginAttempts", 0);
             return "success";
-        }
-        else{
-            session.setAttribute("loginAttempts", attempts + 1);
-            if (attempts >= 2) {
-                return "blocked";
-            }
-            else{
-                return "failed";
-            }
+        }else if(user.isPresent() && attempts < 2){
+            attempts++;
+            session.setAttribute("loginAttempts", attempts);
+            return "failed";
+        }else{
+            return "blocked";
         }
 
     }
