@@ -59,21 +59,20 @@ public class LoginController {
     }
 
     @PostMapping("/unblock")
-    public String unblock(@RequestBody LoginRequest unblockRequest, HttpSession session) {
+    public String unblock(@RequestBody ActivationRequest activationRequest, HttpSession session) {
 
-        User user = userRepository.findByUsername(unblockRequest.getUsername()).orElse(null);
+        if(userService.generateActivationCode(activationRequest)){
+            User user = userRepository.findByUsername(activationRequest.getUsername()).orElse(null);
+            if(user!=null){
+                session.setAttribute("loginAttempts", 0);
+                return "Activation code generated!" + user.getActivationCode();
+            }else{
+                throw new Error("Activation code not found");
+            }
 
-        if(user == null) {
-            return "user not found";
+
         }
-        if(userService.unblockUser(user, unblockRequest))
-        {
-            session.setAttribute("loginAttempts", 0);
-            return "unblocked";
-        }
-        else{
-            return"Invalid login credentials";
-        }
+            return "Activation code not generated";
 
     }
 }

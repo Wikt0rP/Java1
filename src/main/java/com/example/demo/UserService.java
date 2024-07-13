@@ -28,15 +28,17 @@ public class UserService {
        userRepository.save(user);
     }
 
-    public void generateActivationCode(ActivationRequest activationRequest){
+    public Boolean generateActivationCode(ActivationRequest activationRequest){
         User user = userRepository.findByUsername(activationRequest.getUsername())
                 .orElse(null);
 
         if(user != null){
             user.setActivationCode(generateCode());
             userRepository.save(user);
+            return true;
         }else{
             throw new Error("User not found");
+
         }
 
     }
