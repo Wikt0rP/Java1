@@ -14,6 +14,8 @@ public class LoginController {
     @Autowired //Można użyć konstruktora? Robi różnice podczas testowania kodu(?)
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
 
     @PostMapping("/register")
     public String test(@RequestBody LoginRequest registerRequest) {
@@ -53,12 +55,21 @@ public class LoginController {
     }
 
     @PostMapping("/unblock")
-    public String unblock(@RequestBody User user, HttpSession session) {
-        String username = user.getUsername();
-        session.setAttribute("loginAttempts", 0);
-        return "account unblocked!";
-        // w przyszłości dodać generowanie kodu + który trzeba przepisać (niby wysłany na mail'a)
+    public String unblock(@RequestBody LoginRequest unblockRequest, HttpSession session) {
 
+        User user = userRepository.findByUsername(unblockRequest.getUsername()).orElse(null);
+
+        if(user == null) {
+            return "user not found";
+        }
+        if(userService.unblockUser(user, unblockRequest))
+        {
+            session.setAttribute("loginAttempts", 0);
+            return "unblocked";
+        }
+        else{
+            return"Invalid login credentials";
+        }
 
     }
 }
