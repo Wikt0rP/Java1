@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:63342")
+@CrossOrigin(origins = "*")
 public class LoginController {
 
     @GetMapping("/test")
@@ -14,6 +14,9 @@ public class LoginController {
     }
     @PostMapping("/login")
     public String login(@RequestBody User user, HttpSession session) {
+
+        System.out.println("Received login request: " + user.getLogin() + ", " + user.getPassword());
+
 
         String correctLogin = "admin";
         String correctPassword = "admin";
