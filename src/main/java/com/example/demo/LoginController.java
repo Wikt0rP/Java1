@@ -13,15 +13,15 @@ public class LoginController {
         return "test";
     }
     @PostMapping("/login")
-    public String login(@RequestBody User user, HttpSession session) {
+    public String login(@RequestBody LoginRequest loginRequest, HttpSession session) {
 
-        System.out.println("Received login request: " + user.getLogin() + ", " + user.getPassword());
+        System.out.println("Received login request: " + loginRequest.getUsername() + ", " + loginRequest.getPassword());
 
 
         String correctLogin = "admin";
         String correctPassword = "admin";
-        String username = user.getLogin();
-        String password = user.getPassword();
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
 
         Integer attempts = (Integer) session.getAttribute("loginAttempts");
 
