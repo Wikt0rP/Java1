@@ -4,16 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My Website</title>
+    <title>[Test] API Logowanie</title>
+
+    <style>
+        #loginForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 400px;
+        }
+
+    </style>
+
 </head>
 <body>
-<form id = "loginForm">
-    <label for="login">Login:</label><input type ="text" id = "login">
-    <label for="password">Password:</label><input type ="password" id = "password">
-    <input type = "submit">
-    <p id="errorMessage" style="color: red; display: none;">Incorrect login or password.</p>
-
-</form>
+<div id="loginForm">
+    <form>
+        <label for="login">Login:</label> <br>
+        <input type="text" id="login"><br>
+        <label for="password">Password:</label> <br>
+        <input type="password" id="password"><br>
+        <input type="submit">
+        <p id="errorMessage" style="color: red; display: none;">Incorrect login or password.</p>
+    </form>
+</div>
 
 <script>
     document.getElementById("loginForm").addEventListener("submit", function (event) {
