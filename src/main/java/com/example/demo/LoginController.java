@@ -2,7 +2,12 @@ package com.example.demo;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.SecureRandom;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -15,20 +20,22 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @PostMapping("/register")
     public String test(@RequestBody LoginRequest registerRequest) {
 
         if(userRepository.existsByUsername(registerRequest.getUsername())) {
             return "User already exists";
         }else{
-            User user = new User(registerRequest.getUsername(), registerRequest.getPassword());
+            User user = new User(registerRequest.getUsername(), passwordEncoder.encode(registerRequest.getPassword()));
             userRepository.save(user);
             return "User registered";
         }
-
-
-
     }
+
+
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest loginRequest, HttpSession session) {
 
