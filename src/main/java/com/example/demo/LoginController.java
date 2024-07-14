@@ -49,7 +49,7 @@ public class LoginController {
             return "User not found";
         }
 
-        if (user.getPassword().equals(loginRequest.getPassword())  && attempts < 2) {
+        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())  && attempts < 2) {
             session.setAttribute("loginAttempts", 0);
             return "success";
         }else if(attempts < 2){
