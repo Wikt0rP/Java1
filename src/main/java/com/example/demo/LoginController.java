@@ -30,8 +30,12 @@ public class LoginController {
             return "User already exists";
         }else{
             User user = new User(registerRequest.getUsername(), passwordEncoder.encode(registerRequest.getPassword()));
+            user.setIsBlocked(true);
+            user.setActivationCode(UserService.generateCode());
             userRepository.save(user);
-            return "User registered";
+
+
+            return "User registered your activation code --> " + user.getActivationCode();
         }
     }
 
@@ -49,7 +53,7 @@ public class LoginController {
             return "User not found";
         }
 
-        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())  && attempts < 2) {
+        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())  && attempts < 2 && !user.getIsBlocked()) {
             session.setAttribute("loginAttempts", 0);
             return "success";
         }else if(attempts < 2){
