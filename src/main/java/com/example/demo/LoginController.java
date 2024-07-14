@@ -64,7 +64,6 @@ public class LoginController {
             userService.blockUser(user);
             return "blocked";
         }
-
     }
 
     @PostMapping("/unblock")
