@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.SecureRandom;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:63342")
 @RequestMapping("/api")
 public class LoginController {
 
@@ -50,6 +50,8 @@ public class LoginController {
 
         User user = userRepository.findByUsername(loginRequest.getUsername()).orElse(null);
         if(user == null) {
+            attempts++;
+            session.setAttribute("loginAttempts", attempts);
             return "User not found";
         }
 
@@ -62,6 +64,7 @@ public class LoginController {
             return "failed";
         }else{
             userService.blockUser(user);
+            session.invalidate();
             return "blocked";
         }
     }
