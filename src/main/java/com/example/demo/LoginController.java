@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -22,6 +23,10 @@ public class LoginController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HttpServletRequest request;
+
 
     @PostMapping("/register")
     public String test(@RequestBody LoginRequest registerRequest) {
@@ -92,5 +97,10 @@ public class LoginController {
        }else{
            return "account could not be activated";
        }
+    }
+
+    @PostMapping("/getAddress")
+    public String getAddress(@RequestBody LoginRequest loginRequest){
+        return request.getRemoteAddr(); // logowanie adresu IP po nieudanych próbach na x minut blok/recaptcha?? https://medium.com/@pkumarsaha71/integrate-recaptcha-using-spring-boot-and-angular-ef6988503179
     }
 }
