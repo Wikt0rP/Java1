@@ -70,6 +70,7 @@ public class LoginController {
         }else{
             userService.blockUser(user);
             session.invalidate();
+
             return "blocked";
         }
     }
@@ -97,10 +98,5 @@ public class LoginController {
        }else{
            return "account could not be activated";
        }
-    }
-
-    @PostMapping("/getAddress")
-    public String getAddress(@RequestBody LoginRequest loginRequest){
-        return request.getRemoteAddr(); // logowanie adresu IP po nieudanych próbach na x minut blok/recaptcha?? https://medium.com/@pkumarsaha71/integrate-recaptcha-using-spring-boot-and-angular-ef6988503179
     }
 }

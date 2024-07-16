@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -19,7 +21,10 @@ public class Address {
 
     private String ip;
 
-    public Address(String ip) {
+    private Date banDate;
+
+    public Address(String ip, Date banDate) {
         this.ip = ip;
+        this.banDate = banDate;
     }
 }
