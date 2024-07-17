@@ -35,12 +35,14 @@ public class LoginController {
             return "User already exists";
         }else{
             User user = new User(registerRequest.getUsername(), passwordEncoder.encode(registerRequest.getPassword()));
-            user.setIsBlocked(true);
-            user.setActivationCode(UserService.generateCode());
-            userRepository.save(user);
 
-
-            return "User registered your activation code --> " + user.getActivationCode();
+            if(userService.registerUser(user)){
+                return "User registered successfully \n" +
+                        "Username: "+ user.getUsername() +
+                        "Activation code -->" + user.getActivationCode();
+            }else {
+                return "User can not be registered";
+            }
         }
     }
 

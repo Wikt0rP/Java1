@@ -10,6 +10,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
+    public Boolean registerUser(User user) {
+        user.setIsBlocked(true);
+        user.setActivationCode(UserService.generateCode());
+        userRepository.save(user);
+        return true;
+    }
     public Boolean unblockUser(User user, LoginRequest unblockRequest) {
         if (user.getPassword().equals(unblockRequest.getPassword())) {
             user.setIsBlocked(false);
