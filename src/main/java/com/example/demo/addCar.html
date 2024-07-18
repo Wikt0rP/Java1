@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>[Test] ADD CAR</title>
+
+    <style>
+        #addCarFrom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 400px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id="addCarFrom">
+    <form>
+        <label for="carBrand">Car brand:</label> <br>
+        <input type="text" id="carBrand"><br>
+        <label for="carModel">Car model:</label> <br>
+        <input type="text" id="carModel"><br>
+        <label for="carYear">Production year:</label> <br>
+        <input type="text" id="carYear"><br>
+        <label for="carVin">Car vin:</label> <br>
+        <input type="text" id="carVin"><br>
+        <input type="submit" value="Add car">
+        <p id="errorMessage" style="color: red; display: none;">Incorrect login or password.</p>
+    </form>
+</div>
+
+<script>
+    document.getElementById("addCarFrom").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const carBrand = document.getElementById("carBrand").value
+        const carModel = document.getElementById("carModel").value
+        const carYear = document.getElementById("carYear").value
+        const carVin = document.getElementById("carVin").value
+        const data = {  brand: carBrand,
+                        model: carModel,
+                        year: carYear,
+                        vin: carVin}
+
+        console.log('Car brand:', carBrand);
+        console.log('Car model:', carModel);
+        console.log('Car year:', carYear);
+        console.log('Car vin:', carVin);
+
+        fetch('http://127.0.0.1:8080/car/add', {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if(!response.ok){
+                throw new Error("Connection failed.")
+            }
+            return response.text()
+        })
+        });
+
+</script>
+</body>
+</html>
