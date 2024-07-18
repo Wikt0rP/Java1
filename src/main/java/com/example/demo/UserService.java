@@ -54,6 +54,7 @@ public class UserService {
 
         if (user != null && activateAccountRequest.getActivationCode().equals(user.getActivationCode())) {
             user.setIsBlocked(false);
+            user.setActivationCode(null);
             userRepository.save(user);
             return true;
 
