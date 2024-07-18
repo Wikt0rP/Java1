@@ -3,6 +3,8 @@ package com.example.demo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +50,7 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
 
         Integer attempts = (Integer) session.getAttribute("loginAttempts");
         if(attempts == null) {
@@ -59,21 +61,21 @@ public class LoginController {
         if(user == null) {
             attempts++;
             session.setAttribute("loginAttempts", attempts);
-            return "User not found";
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
 
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())  && attempts < 2 && !user.getIsBlocked()) {
             session.setAttribute("loginAttempts", 0);
-            return "success";
+            return new ResponseEntity<>("success", HttpStatus.OK);
         }else if(attempts < 2){
             attempts++;
             session.setAttribute("loginAttempts", attempts);
-            return "failed";
+            return new ResponseEntity<>("failed", HttpStatus.BAD_REQUEST);
         }else{
             userService.blockUser(user);
             session.invalidate();
+            return new ResponseEntity<>("blocked", HttpStatus.TOO_MANY_REQUESTS);
 
-            return "blocked";
         }
     }
 
@@ -89,6 +91,7 @@ public class LoginController {
                 throw new Error("Activation code not found");
             }
         }
+
             return "Activation code not generated";
     }
 
