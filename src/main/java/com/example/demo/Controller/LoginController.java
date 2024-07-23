@@ -1,16 +1,18 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
+import com.example.demo.Entity.User;
+import com.example.demo.Repository.UserRepository;
+import com.example.demo.Request.ActivateAccountRequest;
+import com.example.demo.Request.ActivationCodeRequest;
+import com.example.demo.Request.LoginRequest;
+import com.example.demo.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.SecureRandom;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:63342")
@@ -26,8 +28,6 @@ public class LoginController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private HttpServletRequest request;
 
 
     @PostMapping("/register")

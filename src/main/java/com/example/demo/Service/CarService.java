@@ -1,5 +1,8 @@
-package com.example.demo;
+package com.example.demo.Service;
 
+import com.example.demo.Entity.Car;
+import com.example.demo.Repository.CarRepository;
+import com.example.demo.Request.DeleteCarRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +11,7 @@ import java.util.List;
 @Service
 public class CarService {
     @Autowired
-    private  CarRepository carRepository;
+    private CarRepository carRepository;
 
     public Boolean addCarToDB(Car car){
         if(car.getVin().length() == 17){
@@ -57,10 +60,7 @@ public class CarService {
         if(deleteCarRequest.getVin().length() != 17){
             return false;
         }
-        if(carRepository.deleteCarByVin(deleteCarRequest.getVin()) != 0){
-                return true;
-        }
-        return false;
+        return carRepository.deleteCarByVin(deleteCarRequest.getVin()) != 0;
 
 
     }

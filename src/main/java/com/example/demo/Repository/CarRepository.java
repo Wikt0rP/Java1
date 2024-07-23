@@ -1,8 +1,7 @@
-package com.example.demo;
+package com.example.demo.Repository;
 
-import jakarta.persistence.Table;
+import com.example.demo.Entity.Car;
 import jakarta.transaction.Transactional;
-import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

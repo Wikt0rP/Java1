@@ -1,5 +1,10 @@
-package com.example.demo;
+package com.example.demo.Service;
 
+import com.example.demo.Request.ActivateAccountRequest;
+import com.example.demo.Request.ActivationCodeRequest;
+import com.example.demo.Entity.User;
+import com.example.demo.Repository.UserRepository;
+import com.example.demo.Request.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
