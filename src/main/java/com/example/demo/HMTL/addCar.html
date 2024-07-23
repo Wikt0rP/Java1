@@ -5,21 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>[Test] ADD CAR</title>
-
     <style>
-        #addCarFrom {
+        #addCarForm {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 400px;
         }
-
+        #successMessage, #errorMessage {
+            display: none;
+            margin-top: 20px;
+        }
+        #successMessage {
+            color: green;
+        }
+        #errorMessage {
+            color: red;
+        }
     </style>
-
 </head>
 <body>
-<div id="addCarFrom">
-    <form>
+<div id="addCarForm">
+    <form id="addCarFormElement">
         <label for="carBrand">Car brand:</label> <br>
         <input type="text" id="carBrand"><br>
         <label for="carModel">Car model:</label> <br>
@@ -29,22 +36,26 @@
         <label for="carVin">Car vin:</label> <br>
         <input type="text" id="carVin"><br>
         <input type="submit" value="Add car">
-        <p id="errorMessage" style="color: red; display: none;">Incorrect login or password.</p>
     </form>
+    <p id="successMessage">Car added successfully.</p>
+    <p id="errorMessage">Car could not be added.</p>
 </div>
 
 <script>
-    document.getElementById("addCarFrom").addEventListener("submit", function (event) {
+    document.getElementById("addCarFormElement").addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const carBrand = document.getElementById("carBrand").value
-        const carModel = document.getElementById("carModel").value
-        const carYear = document.getElementById("carYear").value
-        const carVin = document.getElementById("carVin").value
-        const data = {  brand: carBrand,
-                        model: carModel,
-                        year: carYear,
-                        vin: carVin}
+        const carBrand = document.getElementById("carBrand").value;
+        const carModel = document.getElementById("carModel").value;
+        const carYear = document.getElementById("carYear").value;
+        const carVin = document.getElementById("carVin").value;
+
+        const data = {
+            carBrand: carBrand,
+            model: carModel,
+            year: carYear,
+            vin: carVin
+        };
 
         console.log('Car brand:', carBrand);
         console.log('Car model:', carModel);
@@ -53,18 +64,31 @@
 
         fetch('http://127.0.0.1:8080/car/add', {
             method: 'POST',
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
-                },
+            },
             body: JSON.stringify(data)
         }).then(response => {
-            if(!response.ok){
-                throw new Error("Connection failed.")
+            if (response.ok) {
+                return response.text().then(message => {
+                    document.getElementById('successMessage').textContent = message;
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                });
+            } else {
+                return response.text().then(message => {
+                    document.getElementById('errorMessage').textContent = message;
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                });
             }
-            return response.text()
-        })
+        }).catch(error => {
+            console.error('Error:', error);
+            document.getElementById('errorMessage').textContent = 'An error occurred.';
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
         });
-
+    });
 </script>
 </body>
 </html>

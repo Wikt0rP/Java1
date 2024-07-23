@@ -39,19 +39,16 @@ public class CarController {
 
     }
 
-    @GetMapping("/get")
+    @PostMapping("/get")
     public ResponseEntity<List<Car>> getCar(@RequestBody GetCarRequest getCarRequest){
-        List<Car> carsFiltered = new ArrayList<>();
-        System.out.println("Car Brand:" + getCarRequest.getCarBrand());
-        System.out.println("Car Model: "+ getCarRequest.getModel());
-        carsFiltered = carService.getCarByModel(getCarRequest.getCarBrand(), getCarRequest.getModel());
-
+        List<Car> carsFiltered = carService.getCarByModel(getCarRequest.getCarBrand(), getCarRequest.getModel());
         if(carsFiltered != null){
             return ResponseEntity.ok(carsFiltered);
         } else {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
 
     @PatchMapping("/update")
     public ResponseEntity<Car> updateCar(@RequestBody UpdateCarRequest updateCarRequest){
