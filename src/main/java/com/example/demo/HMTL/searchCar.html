@@ -19,6 +19,20 @@
             border: 1px solid #000;
             padding: 10px;
             margin: 10px 0;
+            position: relative;
+        }
+        .editForm, .deleteForm {
+            display: none;
+            flex-direction: column;
+        }
+        .editButton, .deleteButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            margin-left: 5px;
+        }
+        .editButton {
+            right: 70px;
         }
     </style>
 </head>
@@ -38,16 +52,13 @@
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-
         const carBrand = document.getElementById('carBrand').value;
         const carModel = document.getElementById('carModel').value;
-
 
         const payload = {
             carBrand: carBrand,
             model: carModel
         };
-
 
         fetch('http://127.0.0.1:8080/car/get', {
             method: 'POST',
@@ -66,12 +77,42 @@
                         const carDiv = document.createElement('div');
                         carDiv.classList.add('car');
                         carDiv.innerHTML = `
-                    <p><strong>Brand:</strong> ${car.carBrand}</p>
-                    <p><strong>Model:</strong> ${car.model}</p>
-                    <p><strong>VIN:</strong> ${car.vin}</p>
-                    <p><strong>Year:</strong> ${car.year}</p>
-                `;
+                            <p><strong>Brand:</strong> ${car.carBrand}</p>
+                            <p><strong>Model:</strong> ${car.model}</p>
+                            <p><strong>VIN:</strong> ${car.vin}</p>
+                            <p><strong>Year:</strong> ${car.year}</p>
+                            <button class="editButton">Edit</button>
+                            <button class="deleteButton">Delete</button>
+                            <form class="editForm">
+                                <label for="editCarBrand">Car brand:</label>
+                                <input type="text" class="editCarBrand" value="${car.carBrand}">
+                                <label for="editCarModel">Car model:</label>
+                                <input type="text" class="editCarModel" value="${car.model}">
+                                <label for="editCarYear">Year:</label>
+                                <input type="text" class="editCarYear" value="${car.year}">
+                                <input type="hidden" class="editCarVin" value="${car.vin}">
+                                <input type="submit" value="Update car">
+                            </form>
+                            <form class="deleteForm">
+                                <input type="hidden" class="deleteCarVin" value="${car.vin}">
+                            </form>
+                        `;
                         carListDiv.appendChild(carDiv);
+
+                        carDiv.querySelector('.editButton').addEventListener('click', () => {
+                            const editForm = carDiv.querySelector('.editForm');
+                            editForm.style.display = editForm.style.display === 'none' ? 'flex' : 'none';
+                        });
+
+                        carDiv.querySelector('.deleteButton').addEventListener('click', () => {
+                            const deleteForm = carDiv.querySelector('.deleteForm');
+                            handleDelete(deleteForm);
+                        });
+
+                        carDiv.querySelector('.editForm').addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            handleEdit(e.target);
+                        });
                     });
                     document.getElementById('errorMessage').style.display = 'none';
                 } else {
@@ -83,6 +124,62 @@
                 document.getElementById('errorMessage').style.display = 'block';
             });
     });
+
+    function handleEdit(form) {
+        const carBrand = form.querySelector('.editCarBrand').value;
+        const carModel = form.querySelector('.editCarModel').value;
+        const carYear = form.querySelector('.editCarYear').value;
+        const carVin = form.querySelector('.editCarVin').value;
+
+        const payload = {
+            carBrand: carBrand,
+            model: carModel,
+            vin: carVin,
+            year: carYear
+        };
+
+        fetch('http://127.0.0.1:8080/car/update', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Car updated successfully!');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating car');
+            });
+    }
+
+    function handleDelete(form) {
+        const carVin = form.querySelector('.deleteCarVin').value;
+
+        const payload = {
+            vin: carVin
+        };
+
+        fetch('http://127.0.0.1:8080/car/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting car');
+            });
+    }
 </script>
 </body>
 </html>
