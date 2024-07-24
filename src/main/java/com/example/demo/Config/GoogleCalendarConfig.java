@@ -27,21 +27,9 @@ import java.util.List;
 public class GoogleCalendarConfig {
 
     private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
-    /**
-     * Global instance of the JSON factory.
-     */
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    /**
-     * Directory to store authorization tokens for this application.
-     */
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
-
-    /**
-     * Global instance of the scopes required by this quickstart.
-     * If modifying these scopes, delete your previously saved tokens/ folder.
-     */
-    private static final List<String> SCOPES =
-            Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     @Bean
@@ -83,8 +71,4 @@ public class GoogleCalendarConfig {
         //returns an authorized Credential object.
         return credential;
     }
-
-
-
-
 }
