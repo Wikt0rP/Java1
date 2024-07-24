@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +32,19 @@ public class CalendarService {
     @Autowired
     private Calendar calendar;
 
-    public List<Event> getAllEvents(Calendar calendar) throws IOException {
+    public List<Event> getAllEvents() throws IOException {
+        List<Event> allEvents = new ArrayList<>();
+        String pageToken = null;
 
+        do{
+            Events events = calendar.events().list("primary")
+                    .setPageToken(pageToken)
+                    .execute();
+            List<Event> items = events.getItems();
+            allEvents.addAll(items);
+            pageToken= events.getNextPageToken();
+
+        }while(pageToken != null);
+        return allEvents;
     }
 }

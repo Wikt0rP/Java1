@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ public class CalendarController {
     private CalendarService calendarService;
 
     @GetMapping("/events")
-    public ResponseEntity<List<Event>> getEvent() {
-
+    public ResponseEntity<String> getAllEvents() throws IOException {
+        return new ResponseEntity<>("All events", HttpStatus.OK);
     }
 
     @PostMapping("/create")
