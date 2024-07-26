@@ -28,8 +28,8 @@ public class CalendarController {
     private CalendarService calendarService;
 
     @GetMapping("/events")
-    public ResponseEntity<String> getAllEvents() throws IOException {
-        return new ResponseEntity<>("All events", HttpStatus.OK);
+    public ResponseEntity<List<Event>> getAllEvents() throws IOException {
+        return new ResponseEntity<>(calendarService.getAllEvents(), HttpStatus.OK);
     }
 
     @PostMapping("/create")
